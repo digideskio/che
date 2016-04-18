@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.che.ide.ext.java.client.inject.factories;
 
-import org.eclipse.che.ide.ext.java.client.project.properties.valueproviders.button.ButtonWidget;
-import org.eclipse.che.ide.ext.java.client.project.properties.valueproviders.button.ButtonWidgetImpl;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.button.ButtonWidget;
 import org.eclipse.che.ide.extension.machine.client.perspective.widgets.recipe.editor.button.EditorButtonWidget;
-import org.eclipse.che.ide.extension.machine.client.perspective.widgets.tab.header.TabHeader;
 
 import javax.validation.constraints.NotNull;
 

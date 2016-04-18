@@ -11,7 +11,7 @@
 package org.eclipse.che.plugin.java.plain.server.projecttype;
 
 import org.eclipse.che.api.core.ServerException;
-import org.eclipse.che.ide.ext.java.server.projecttype.AbstractJavaInitHandler;
+import org.eclipse.che.plugin.java.server.projecttype.AbstractJavaInitHandler;
 import org.eclipse.che.jdt.core.launching.JREContainerInitializer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Path;

@@ -351,11 +351,11 @@ public interface JavaLocalizationConstant extends Messages {
     @Key("unable.to.load.java.compiler.errors.warnings.settings")
     String unableToLoadJavaCompilerErrorsWarningsSettings();
 
-    @Key("project.properties.action.description")
-    String projectPropertiesDescriptions();
+    @Key("project.classpath.action.description")
+    String projectClasspathDescriptions();
 
-    @Key("project.properties.action.title")
-    String projectPropertiesTitle();
+    @Key("project.classpath.action.title")
+    String projectClasspathTitle();
 
     @Key("libraries.property.name")
     String librariesPropertyName();
@@ -369,6 +369,24 @@ public interface JavaLocalizationConstant extends Messages {
     @Key("remove.element.button")
     String removeElementButton();
 
-    @Key("add.jar.button")
+    @Key("button.addJar")
     String addJarButton();
+
+    @Key("messages.promptSaveChanges")
+    String messagesPromptSaveChanges();
+
+    @Key("button.saveChanges.discard")
+    String buttonSaveChangesDiscard();
+
+    @Key("button.save")
+    String buttonSave();
+
+    @Key("unsavedChanges.title")
+    String unsavedChangesTitle();
+
+    @Key("button.addClassFolder")
+    String buttonAddClassFolder();
+
+    @Key("button.close")
+    String buttonClose();
 }

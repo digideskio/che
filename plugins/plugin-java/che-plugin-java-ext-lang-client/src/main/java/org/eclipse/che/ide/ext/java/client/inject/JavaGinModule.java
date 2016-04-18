@@ -45,10 +45,10 @@ import org.eclipse.che.ide.ext.java.client.project.interceptor.JavaContentRootIn
 import org.eclipse.che.ide.ext.java.client.project.interceptor.TestContentRootDecorator;
 import org.eclipse.che.ide.ext.java.client.project.node.JavaNodeFactory;
 import org.eclipse.che.ide.ext.java.client.project.node.JavaNodeManager;
-import org.eclipse.che.ide.ext.java.client.project.properties.valueproviders.PropertiesPagePresenter;
-import org.eclipse.che.ide.ext.java.client.project.properties.valueproviders.button.ButtonWidget;
-import org.eclipse.che.ide.ext.java.client.project.properties.valueproviders.button.ButtonWidgetImpl;
-import org.eclipse.che.ide.ext.java.client.project.properties.valueproviders.libraries.LibPropertyPresenter;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.ClasspathPagePresenter;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.button.ButtonWidget;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.button.ButtonWidgetImpl;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.libraries.LibEntryPresenter;
 import org.eclipse.che.ide.ext.java.client.project.settings.JavaNodeSettingsProvider;
 import org.eclipse.che.ide.ext.java.client.reference.JavaFqnProvider;
 import org.eclipse.che.ide.ext.java.client.search.JavaSearchService;
@@ -111,7 +111,7 @@ public class JavaGinModule extends AbstractGinModule {
         GinMultibinder.newSetBinder(binder(), PreferencesManager.class).addBinding().to(ErrorsWarningsPreferenceManager.class);
 
         GinMultibinder.newSetBinder(binder(), CommandPropertyValueProvider.class).addBinding().to(CurrentClassFQNProvider.class);
-        GinMultibinder.newSetBinder(binder(), PropertiesPagePresenter.class).addBinding().to(LibPropertyPresenter.class);
+        GinMultibinder.newSetBinder(binder(), ClasspathPagePresenter.class).addBinding().to(LibEntryPresenter.class);
     }
 
     @Provides
