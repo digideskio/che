@@ -80,7 +80,7 @@ public class WsAgentLauncherImpl implements WsAgentLauncher {
         final String wsAgentPingUrl = devMachine.getRuntime()
                                                 .getServers()
                                                 .get(Constants.WS_AGENT_PORT)
-                                                .getUrl();
+                                                .getUrl() + "/";
         try {
             getMachineManager().exec(devMachine.getId(),
                                      new CommandImpl(WS_AGENT_PROCESS_NAME, wsAgentStartCommandLine, "Arbitrary"),
