@@ -16,6 +16,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+
 import org.eclipse.che.api.core.model.machine.MachineStatus;
 import org.eclipse.che.api.machine.gwt.client.MachineManager;
 import org.eclipse.che.api.machine.gwt.client.MachineServiceClient;
@@ -46,6 +47,11 @@ import org.eclipse.che.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode.FLOAT_MODE;
+import static org.eclipse.che.ide.api.notification.StatusNotification.Status.FAIL;
+import static org.eclipse.che.ide.api.notification.StatusNotification.Status.PROGRESS;
+import static org.eclipse.che.ide.api.notification.StatusNotification.Status.SUCCESS;
 
 /**
  * Targets manager presenter.
@@ -470,7 +476,7 @@ public class TargetsPresenter implements TargetsView.ActionDelegate {
         view.selectTarget(selectedTarget);
 
         //updateButtons();
-        notificationManager.notify(machineLocale.targetsViewSaveSuccess(), StatusNotification.Status.SUCCESS, true);
+        notificationManager.notify(machineLocale.targetsViewSaveSuccess(), SUCCESS, FLOAT_MODE);
     }
 
     @Override
@@ -511,7 +517,7 @@ public class TargetsPresenter implements TargetsView.ActionDelegate {
     private void connect() {
         view.setConnectButtonText(null);
 
-        connectNotification = notificationManager.notify(machineLocale.targetsViewConnectProgress(selectedTarget.getName()), StatusNotification.Status.PROGRESS, true);
+        connectNotification = notificationManager.notify(machineLocale.targetsViewConnectProgress(selectedTarget.getName()), PROGRESS, FLOAT_MODE);
 
         String recipeURL = selectedTarget.getRecipe().getLink("get recipe script").getHref();
 
@@ -576,13 +582,13 @@ public class TargetsPresenter implements TargetsView.ActionDelegate {
      */
     private void onConnected() {
         connectNotification.setTitle(machineLocale.targetsViewConnectSuccess(selectedTarget.getName()));
-        connectNotification.setStatus(StatusNotification.Status.SUCCESS);
+        connectNotification.setStatus(SUCCESS);
         updateTargets(selectedTarget.getName());
     }
 
     private void onConnectingFailed() {
         connectNotification.setTitle(machineLocale.targetsViewConnectError(selectedTarget.getName()));
-        connectNotification.setStatus(StatusNotification.Status.FAIL);
+        connectNotification.setStatus(FAIL);
 
         view.selectTarget(selectedTarget);
     }
@@ -617,13 +623,13 @@ public class TargetsPresenter implements TargetsView.ActionDelegate {
             @Override
             public void apply(Void arg) throws OperationException {
                 eventBus.fireEvent(new MachineStateEvent(machine, MachineStateEvent.MachineAction.DESTROYED));
-                notificationManager.notify(machineLocale.targetsViewDisconnectSuccess(selectedTarget.getName()), StatusNotification.Status.SUCCESS, true);
+                notificationManager.notify(machineLocale.targetsViewDisconnectSuccess(selectedTarget.getName()), SUCCESS, FLOAT_MODE);
                 updateTargets(selectedTarget.getName());
             }
         }).catchError(new Operation<PromiseError>() {
             @Override
             public void apply(PromiseError arg) throws OperationException {
-                notificationManager.notify(machineLocale.targetsViewDisconnectError(selectedTarget.getName()), StatusNotification.Status.FAIL, true);
+                notificationManager.notify(machineLocale.targetsViewDisconnectError(selectedTarget.getName()), FAIL, FLOAT_MODE);
                 updateTargets(selectedTarget.getName());
             }
         });
@@ -666,7 +672,7 @@ public class TargetsPresenter implements TargetsView.ActionDelegate {
         machineService.destroyMachine(machineId).then(new Operation<Void>() {
             @Override
             public void apply(Void arg) throws OperationException {
-                notificationManager.notify(machineLocale.targetsViewDisconnectSuccess(target.getName()), StatusNotification.Status.SUCCESS, true);
+                notificationManager.notify(machineLocale.targetsViewDisconnectSuccess(target.getName()), SUCCESS, FLOAT_MODE);
                 new Timer() {
                     @Override
                     public void run() {
@@ -677,7 +683,7 @@ public class TargetsPresenter implements TargetsView.ActionDelegate {
         }).catchError(new Operation<PromiseError>() {
             @Override
             public void apply(PromiseError arg) throws OperationException {
-                notificationManager.notify(machineLocale.targetsViewDisconnectError(target.getName()), StatusNotification.Status.FAIL, true);
+                notificationManager.notify(machineLocale.targetsViewDisconnectError(target.getName()), FAIL, FLOAT_MODE);
                 updateTargets(target.getName());
             }
         });
@@ -700,7 +706,7 @@ public class TargetsPresenter implements TargetsView.ActionDelegate {
                 view.selectTarget(null);
                 view.showHintPanel();
 
-                notificationManager.notify(machineLocale.targetsViewDeleteSuccess(target.getName()), StatusNotification.Status.SUCCESS, true);
+                notificationManager.notify(machineLocale.targetsViewDeleteSuccess(target.getName()), SUCCESS, FLOAT_MODE);
             }
         });
 

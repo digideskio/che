@@ -33,6 +33,7 @@ import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import static org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode.FLOAT_MODE;
 import static org.eclipse.che.ide.api.notification.StatusNotification.Status.FAIL;
 
 /**
@@ -147,7 +148,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
                 GitOutputConsole console = gitOutputConsoleFactory.create(REMOTE_REPO_COMMAND_NAME);
                 console.printError(errorMessage);
                 consolesPanelPresenter.addCommandOutput(appContext.getDevMachineId(), console);
-                notificationManager.notify(constant.remoteAddFailed(), FAIL, true, project);
+                notificationManager.notify(constant.remoteAddFailed(), FAIL, FLOAT_MODE, project);
             }
         });
     }
@@ -176,7 +177,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
                 GitOutputConsole console = gitOutputConsoleFactory.create(REMOTE_REPO_COMMAND_NAME);
                 console.printError(errorMessage);
                 consolesPanelPresenter.addCommandOutput(appContext.getDevMachineId(), console);
-                notificationManager.notify(constant.remoteDeleteFailed(), FAIL, true, project);
+                notificationManager.notify(constant.remoteDeleteFailed(), FAIL, FLOAT_MODE, project);
             }
         });
     }
@@ -207,7 +208,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
 
             @Override
             protected void onFailure(Throwable exception) {
-                notificationManager.notify(exception.getLocalizedMessage(), FAIL, true, project);
+                notificationManager.notify(exception.getLocalizedMessage(), FAIL, FLOAT_MODE, project);
             }
         });
     }

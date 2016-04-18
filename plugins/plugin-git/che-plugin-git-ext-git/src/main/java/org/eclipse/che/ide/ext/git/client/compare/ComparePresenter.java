@@ -29,6 +29,7 @@ import org.eclipse.che.ide.ui.dialogs.CancelCallback;
 import org.eclipse.che.ide.ui.dialogs.ConfirmCallback;
 import org.eclipse.che.ide.ui.dialogs.DialogFactory;
 
+import static org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode.NOT_EMERGE_MODE;
 import static org.eclipse.che.ide.api.notification.StatusNotification.Status.FAIL;
 import static org.eclipse.che.ide.ext.git.client.compare.FileStatus.Status.ADDED;
 import static org.eclipse.che.ide.ext.git.client.compare.FileStatus.Status.DELETED;
@@ -106,7 +107,7 @@ public class ComparePresenter implements CompareView.ActionDelegate {
 
                                            @Override
                                            protected void onFailure(Throwable exception) {
-                                               notificationManager.notify(exception.getMessage(), FAIL, false);
+                                               notificationManager.notify(exception.getMessage(), FAIL, NOT_EMERGE_MODE);
                                            }
                                        });
         } else {
@@ -120,7 +121,7 @@ public class ComparePresenter implements CompareView.ActionDelegate {
 
                                            @Override
                                            protected void onFailure(Throwable exception) {
-                                               notificationManager.notify(exception.getMessage(), FAIL, false);
+                                               notificationManager.notify(exception.getMessage(), FAIL, NOT_EMERGE_MODE);
                                            }
                                        });
         }
@@ -146,7 +147,7 @@ public class ComparePresenter implements CompareView.ActionDelegate {
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        notificationManager.notify(exception.getMessage(), FAIL, false);
+                        notificationManager.notify(exception.getMessage(), FAIL, NOT_EMERGE_MODE);
                     }
                 });
                 view.hide();
@@ -179,7 +180,7 @@ public class ComparePresenter implements CompareView.ActionDelegate {
 
                                           @Override
                                           protected void onFailure(Throwable exception) {
-                                              notificationManager.notify(exception.getMessage(), FAIL, false);
+                                              notificationManager.notify(exception.getMessage(), FAIL, NOT_EMERGE_MODE);
                                           }
                                       });
     }

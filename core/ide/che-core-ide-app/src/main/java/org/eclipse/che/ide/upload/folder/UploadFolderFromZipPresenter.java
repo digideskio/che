@@ -30,6 +30,7 @@ import org.eclipse.che.commons.annotation.Nullable;
 
 import java.util.List;
 
+import static org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode.FLOAT_MODE;
 import static org.eclipse.che.ide.api.notification.StatusNotification.Status.FAIL;
 
 /**
@@ -88,7 +89,7 @@ public class UploadFolderFromZipPresenter implements UploadFolderFromZipView.Act
 
         if (result != null && !result.isEmpty()) {
             view.closeDialog();
-            notificationManager.notify(locale.failedToUploadFilesFromZip(), parseMessage(result), FAIL, true);
+            notificationManager.notify(locale.failedToUploadFilesFromZip(), parseMessage(result), FAIL, FLOAT_MODE);
             return;
         }
 
