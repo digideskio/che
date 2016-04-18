@@ -57,7 +57,7 @@ public class WsAgentLauncherImplTest {
     private static final long       WS_AGENT_MAX_START_TIME_MS    = 1000;
     private static final long       WS_AGENT_PING_DELAY_MS        = 1;
     private static final int        WS_AGENT_PING_CONN_TIMEOUT_MS = 1;
-    private static final String     WS_AGENT_SERVER_LOCATION      = "ws-agent.com:456789/";
+    private static final String     WS_AGENT_SERVER_LOCATION      = "ws-agent.com:456789";
     private static final String     WS_AGENT_SERVER_URL           = "http://" + WS_AGENT_SERVER_LOCATION;
     private static final ServerImpl SERVER                        = new ServerImpl("ref",
                                                                                    "http",
@@ -117,7 +117,7 @@ public class WsAgentLauncherImplTest {
 
         verify(requestFactory).fromUrl(UriBuilder.fromUri(WS_AGENT_SERVER_URL)
                                                  .build()
-                                                 .toString());
+                                                 .toString() + "/");
         verify(pingRequest).setMethod(HttpMethod.GET);
         verify(pingRequest).setTimeout(WS_AGENT_PING_CONN_TIMEOUT_MS);
         verify(pingRequest).request();
@@ -133,7 +133,7 @@ public class WsAgentLauncherImplTest {
 
         wsAgentLauncher.startWsAgent(WS_ID);
 
-        verify(requestFactory).fromUrl(WS_AGENT_SERVER_URL);
+        verify(requestFactory).fromUrl(WS_AGENT_SERVER_URL + "/");
         verify(pingRequest).setMethod(HttpMethod.GET);
         verify(pingRequest).setTimeout(WS_AGENT_PING_CONN_TIMEOUT_MS);
         verify(pingRequest, times(4)).request();
@@ -148,7 +148,7 @@ public class WsAgentLauncherImplTest {
 
         wsAgentLauncher.startWsAgent(WS_ID);
 
-        verify(requestFactory).fromUrl(WS_AGENT_SERVER_URL);
+        verify(requestFactory).fromUrl(WS_AGENT_SERVER_URL + "/");
         verify(pingRequest).setMethod(HttpMethod.GET);
         verify(pingRequest).setTimeout(WS_AGENT_PING_CONN_TIMEOUT_MS);
         verify(pingRequest, times(3)).request();
