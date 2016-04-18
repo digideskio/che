@@ -27,7 +27,8 @@ import org.eclipse.che.ide.api.project.node.Node;
 import org.eclipse.che.ide.api.project.node.interceptor.NodeInterceptor;
 import org.eclipse.che.ide.ext.java.client.JavaResources;
 import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.interceptors.ClasspathNodeInterceptor;
-import org.eclipse.che.ide.project.node.FolderReferenceNode;
+import org.eclipse.che.ide.ext.java.client.project.interceptor.JavaContentRootInterceptor;
+import org.eclipse.che.ide.ext.java.client.project.node.SourceFolderNode;
 import org.eclipse.che.ide.project.shared.NodesResources;
 import org.eclipse.che.ide.ui.smartTree.KeyboardNavigationHandler;
 import org.eclipse.che.ide.ui.smartTree.NodeLoader;
@@ -53,10 +54,12 @@ import static org.eclipse.che.ide.ui.smartTree.SelectionModel.Mode.SINGLE;
  */
 @Singleton
 public class SelectNodeViewImpl extends Window implements SelectNodeView {
-    private final JavaResources javaResources;
-    private final NodesResources nodesResources;
-    private Tree tree;
-    private ActionDelegate delegate;
+    private final JavaResources              javaResources;
+    private final JavaContentRootInterceptor javaContentRootInterceptor;
+    private final NodesResources             nodesResources;
+
+    private Tree                     tree;
+    private ActionDelegate           delegate;
     private ClasspathNodeInterceptor interceptor;
 
     Button acceptButton;
@@ -71,9 +74,11 @@ public class SelectNodeViewImpl extends Window implements SelectNodeView {
     @Inject
     public SelectNodeViewImpl(CoreLocalizationConstant locale,
                               JavaResources javaResources,
+                              JavaContentRootInterceptor javaContentRootInterceptor,
                               SelectPathViewImplUiBinder uiBinder,
                               NodesResources nodesResources) {
         this.javaResources = javaResources;
+        this.javaContentRootInterceptor = javaContentRootInterceptor;
         this.nodesResources = nodesResources;
         setTitle(locale.selectPathWindowTitle());
 
@@ -170,6 +175,7 @@ public class SelectNodeViewImpl extends Window implements SelectNodeView {
         tree.getNodeStorage().clear();
         tree.getNodeLoader().getNodeInterceptors().clear();
         tree.getNodeLoader().getNodeInterceptors().add(interceptor);
+        tree.getNodeLoader().getNodeInterceptors().add(javaContentRootInterceptor);
         for (Node node : nodes) {
             tree.getNodeStorage().add(node);
         }
@@ -182,11 +188,14 @@ public class SelectNodeViewImpl extends Window implements SelectNodeView {
         }
         Node selectedNode = nodes.get(0);
         SVGResource icon;
-        if (selectedNode instanceof FolderReferenceNode) {
-            icon = nodesResources.simpleFolder();
-        }   else {
+        if (selectedNode instanceof SourceFolderNode) {
+            icon = javaResources.sourceFolder();
+        } else if (selectedNode.getName().endsWith(".jar")) {
             icon = javaResources.jarFileIcon();
+        } else {
+            icon = nodesResources.simpleFolder();
         }
+
         delegate.setSelectedNode(((HasStorablePath)selectedNode).getStorablePath(), icon);
 
         hide();

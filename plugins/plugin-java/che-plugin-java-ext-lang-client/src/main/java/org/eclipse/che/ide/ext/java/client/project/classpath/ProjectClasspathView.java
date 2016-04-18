@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.ImplementedBy;
 
 import org.eclipse.che.ide.api.mvp.View;
-import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.ClasspathPagePresenter;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.pages.ClasspathPagePresenter;
 
 import java.util.Map;
 import java.util.Set;

@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.libraries;
+package org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.pages.sources;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -19,11 +19,10 @@ import org.eclipse.che.ide.ext.java.client.JavaLocalizationConstant;
 import org.eclipse.che.ide.ext.java.client.JavaResources;
 import org.eclipse.che.ide.ext.java.client.project.classpath.ClasspathResolver;
 import org.eclipse.che.ide.ext.java.client.project.classpath.ProjectClasspathResources;
-import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.AbstractClasspathPagePresenter;
 import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.node.NodeWidget;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.pages.AbstractClasspathPagePresenter;
 import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.SelectNodePresenter;
-import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.interceptors.ClassFolderNodeInterceptor;
-import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.interceptors.JarNodeInterceptor;
+import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.interceptors.SourceFolderNodeInterceptor;
 import org.eclipse.che.ide.project.shared.NodesResources;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -32,16 +31,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.eclipse.che.ide.ext.java.shared.dto.classpath.ClasspathEntry.CONTAINER;
-import static org.eclipse.che.ide.ext.java.shared.dto.classpath.ClasspathEntry.LIBRARY;
+import static org.eclipse.che.ide.ext.java.shared.dto.classpath.ClasspathEntry.SOURCE;
 
 /**
- * The page for the information about libraries which are including into classpath.
+ * The page for the information about source folders which are including into classpath.
  *
  * @author Valeriy Svydenko
  */
 @Singleton
-public class LibEntryPresenter extends AbstractClasspathPagePresenter implements LibEntryView.ActionDelegate,
-                                                                                 NodeWidget.ActionDelegate {
+public class SourceEntryPresenter extends AbstractClasspathPagePresenter implements SourceEntryView.ActionDelegate,
+                                                                                    NodeWidget.ActionDelegate {
 
     private final ClasspathResolver         classpathResolver;
     private final ProjectClasspathResources resources;
@@ -49,23 +48,23 @@ public class LibEntryPresenter extends AbstractClasspathPagePresenter implements
     private final AppContext                appContext;
     private final NodesResources            nodesResources;
     private final SelectNodePresenter       selectNodePresenter;
-    private final LibEntryView              view;
+    private final SourceEntryView           view;
 
     private boolean                 dirty;
     private boolean                 isMaven;
-    private Map<String, NodeWidget> pageNodes;
     private String                  selectedNode;
+    private Map<String, NodeWidget> pageNodes;
 
     @Inject
-    public LibEntryPresenter(LibEntryView view,
-                             ClasspathResolver classpathResolver,
-                             JavaLocalizationConstant localization,
-                             ProjectClasspathResources resources,
-                             JavaResources javaResources,
-                             AppContext appContext,
-                             NodesResources nodesResources,
-                             SelectNodePresenter selectNodePresenter) {
-        super(localization.librariesPropertyName(), localization.javaBuildPathCategory(), null);
+    public SourceEntryPresenter(SourceEntryView view,
+                                ClasspathResolver classpathResolver,
+                                JavaLocalizationConstant localization,
+                                ProjectClasspathResources resources,
+                                JavaResources javaResources,
+                                AppContext appContext,
+                                NodesResources nodesResources,
+                                SelectNodePresenter selectNodePresenter) {
+        super(localization.sourcePropertyName(), localization.javaBuildPathCategory(), null);
         this.view = view;
         this.classpathResolver = classpathResolver;
         this.resources = resources;
@@ -93,14 +92,10 @@ public class LibEntryPresenter extends AbstractClasspathPagePresenter implements
 
         setReadOnlyMod();
 
-        view.setRemoveButtonState(false);
         boolean dirtyState = dirty;
         if (pageNodes.isEmpty()) {
-            for (String con : classpathResolver.getContainers()) {
-                addNode(con, CONTAINER, javaResources.externalLibraries());
-            }
-            for (String lib : classpathResolver.getLibs()) {
-                addNode(lib, LIBRARY, lib.endsWith(".jar") ? javaResources.jarFileIcon() : nodesResources.simpleFolder());
+            for (String source : classpathResolver.getSources()) {
+                addNode(source, CONTAINER, javaResources.sourceFolder());
             }
         } else {
             for (NodeWidget node : pageNodes.values()) {
@@ -117,13 +112,8 @@ public class LibEntryPresenter extends AbstractClasspathPagePresenter implements
     }
 
     @Override
-    public void onAddJarClicked() {
-        selectNodePresenter.show(this, new JarNodeInterceptor());
-    }
-
-    @Override
-    public void onAddClassFolderClicked() {
-        selectNodePresenter.show(this, new ClassFolderNodeInterceptor());
+    public void onAddSourceClicked() {
+        selectNodePresenter.show(this, new SourceFolderNodeInterceptor(), true);
     }
 
     @Override
@@ -133,14 +123,9 @@ public class LibEntryPresenter extends AbstractClasspathPagePresenter implements
 
     @Override
     public void storeChanges() {
-        classpathResolver.getLibs().clear();
-        classpathResolver.getContainers().clear();
+        classpathResolver.getSources().clear();
         for (NodeWidget node : pageNodes.values()) {
-            if (LIBRARY == node.getKind()) {
-                classpathResolver.getLibs().add(node.getName());
-            } else if (CONTAINER == node.getKind()) {
-                classpathResolver.getContainers().add(node.getName());
-            }
+            classpathResolver.getSources().add(node.getName());
         }
         dirty = false;
         delegate.onDirtyChanged();
@@ -152,12 +137,10 @@ public class LibEntryPresenter extends AbstractClasspathPagePresenter implements
         pageNodes.clear();
         selectedNode = null;
 
-        for (String con : classpathResolver.getContainers()) {
-            addNode(con, CONTAINER, javaResources.externalLibraries());
+        for (String source : classpathResolver.getSources()) {
+            addNode(source, SOURCE, javaResources.sourceFolder());
         }
-        for (String lib : classpathResolver.getLibs()) {
-            addNode(lib, LIBRARY, javaResources.jarFileIcon());
-        }
+
 
         dirty = false;
         delegate.onDirtyChanged();
@@ -214,11 +197,7 @@ public class LibEntryPresenter extends AbstractClasspathPagePresenter implements
     }
 
     private void setReadOnlyMod() {
-        if (isMaven) {
-            view.setRemoveButtonState(false);
-            view.setAddJarButtonState(false);
-            view.setAddClassFolderJarButtonState(false);
-        }
+        view.setAddSourceButtonState(!isMaven);
     }
 
 }

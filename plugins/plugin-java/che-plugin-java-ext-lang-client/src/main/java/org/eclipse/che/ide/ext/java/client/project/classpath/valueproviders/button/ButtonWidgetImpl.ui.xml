@@ -31,11 +31,6 @@
             color: buttonHoverFontColor;
         }
 
-        .button:active {
-            background: #256c9f !important;
-            opacity: 0.4;
-        }
-
         .buttonLabel {
             color: mainFontColor;
             margin-top: 5px;

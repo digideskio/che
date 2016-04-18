@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders;
+package org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.pages;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
