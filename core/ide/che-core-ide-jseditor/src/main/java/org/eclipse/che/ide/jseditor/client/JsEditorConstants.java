@@ -107,6 +107,9 @@ public interface JsEditorConstants extends Messages {
     @DefaultMessage("Smart Indentation:")
     String propertySmartIndentation();
 
+    @DefaultMessage("Show Whitespace Characters:")
+    String propertyShowWhitespaces();
+
     @DefaultMessage("Show Annotation Ruler:")
     String propertyShowAnnotationRuler();
 

@@ -28,6 +28,7 @@ public enum EditorProperties {
     AUTO_PAIR_QUOTATIONS("autoPairQuotations"),
     AUTO_COMPLETE_COMMENTS("autoCompleteComments"),
     SMART_INDENTATION("smartIndentation"),
+    SHOW_WHITESPACES("showWhitespaces"),
     SHOW_ANNOTATION_RULER("annotationRuler"),
     SHOW_LINE_NUMBER_RULER("lineNumberRuler"),
     SHOW_FOLDING_RULER("foldingRuler"),

@@ -39,6 +39,7 @@ import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.Ed
 import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.EditorProperties.SHOW_LINE_NUMBER_RULER;
 import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.EditorProperties.SHOW_OCCURRENCES;
 import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.EditorProperties.SHOW_OVERVIEW_RULER;
+import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.EditorProperties.SHOW_WHITESPACES;
 import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.EditorProperties.SHOW_ZOOM_RULER;
 import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.EditorProperties.SMART_INDENTATION;
 import static org.eclipse.che.ide.jseditor.client.preference.editorproperties.EditorProperties.TAB_SIZE;
@@ -73,6 +74,7 @@ public class EditorPropertiesManager {
         names.put(AUTO_PAIR_QUOTATIONS.toString(), locale.propertyAutoPairQuotations());
         names.put(AUTO_COMPLETE_COMMENTS.toString(), locale.propertyAutoCompleteComments());
         names.put(SMART_INDENTATION.toString(), locale.propertySmartIndentation());
+        names.put(SHOW_WHITESPACES.toString(), locale.propertyShowWhitespaces());
         names.put(SHOW_ANNOTATION_RULER.toString(), locale.propertyShowAnnotationRuler());
         names.put(SHOW_LINE_NUMBER_RULER.toString(), locale.propertyShowLineNumberRuler());
         names.put(SHOW_FOLDING_RULER.toString(), locale.propertyShowFoldingRuler());
@@ -101,6 +103,9 @@ public class EditorPropertiesManager {
         defaultProperties.put(AUTO_PAIR_QUOTATIONS.toString(), JSONBoolean.getInstance(true));
         defaultProperties.put(AUTO_COMPLETE_COMMENTS.toString(), JSONBoolean.getInstance(true));
         defaultProperties.put(SMART_INDENTATION.toString(), JSONBoolean.getInstance(true));
+
+        //white spaces
+        defaultProperties.put(SHOW_WHITESPACES.toString(), JSONBoolean.getInstance(false));
 
         // editor features (rulers)
         defaultProperties.put(SHOW_ANNOTATION_RULER.toString(), JSONBoolean.getInstance(true));
