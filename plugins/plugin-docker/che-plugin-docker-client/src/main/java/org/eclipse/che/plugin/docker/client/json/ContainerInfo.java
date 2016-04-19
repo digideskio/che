@@ -14,7 +14,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author andrew00x */
+/**
+ * @author andrew00x
+ * @author Mykola Morhun
+ */
 public class ContainerInfo {
     private String          id;
     // Date format: yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX
@@ -38,6 +41,8 @@ public class ContainerInfo {
     private String[]        execIDs;
     private int             restartCount;
     private String          logPath;
+    /** Node is used for Docker Swarm */
+    private Node            node;
 
     private Map<String, String>  volumes   = new HashMap<>();
     private Map<String, Boolean> volumesRW = new HashMap<>();
@@ -226,6 +231,14 @@ public class ContainerInfo {
         this.logPath = logPath;
     }
 
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
     @Override
     public String toString() {
         return "ContainerInfo{" +
@@ -252,6 +265,7 @@ public class ContainerInfo {
                ", logPath='" + logPath + '\'' +
                ", volumes=" + volumes +
                ", volumesRW=" + volumesRW +
+               ", node=" + node +
                '}';
     }
 }
