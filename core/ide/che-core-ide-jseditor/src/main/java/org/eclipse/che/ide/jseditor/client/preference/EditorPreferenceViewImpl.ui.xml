@@ -21,7 +21,7 @@
 
 
     <g:HTMLPanel height="100%" styleName="{style.main}">
-        <g:SimplePanel ui:field="keymapsSection" debugId="editorKeymapsSection"/>
-        <g:SimplePanel height="345px" ui:field="editorPropertiesSection" debugId="editorPropertiesSection"/>
+        <g:SimplePanel ui:field="keymapsSection" height="40px" debugId="editorKeymapsSection"/>
+        <g:SimplePanel ui:field="editorPropertiesSection" height="325px" debugId="editorPropertiesSection"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -20,10 +20,8 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class EditorSettingsChangedEvent extends GwtEvent<EditorSettingsChangedEvent.EditorSettingsChangedHandler> {
 
-
     /** Handles Editor Settings Changed Event */
     public interface EditorSettingsChangedHandler extends EventHandler {
-
         /**
          * Perform actions when editor's settings has been changed.
          *

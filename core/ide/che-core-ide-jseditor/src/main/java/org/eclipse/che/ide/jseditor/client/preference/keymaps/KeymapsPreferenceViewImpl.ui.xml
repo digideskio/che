@@ -17,20 +17,20 @@
 
     <ui:with type="org.eclipse.che.ide.jseditor.client.preference.EditorPrefLocalizationConstant" field="constants"/>
     <ui:style src="org/eclipse/che/ide/api/ui/style.css">
-        .section {
-            margin-top: 1em;
-            margin-bottom: 0.2em;
+        .label {
+            position: absolute;
+            color: categoriesListItemTextColor;
         }
 
         .tables {
-            min-width: fill-available;
-            min-width: -webkit-fill-available;
+            float: right;
         }
     </ui:style>
 
-    <g:HTMLPanel>
-        <g:Label addStyleNames="{style.section}" text="{constants.keybindingsSectionLabel}"/>
+    <g:FlowPanel>
+        <g:Label text="{constants.keysSectionLabel}"/>
+        <g:Label text="{constants.keybindingsLabel}" addStyleNames="{style.label}"/>
         <c:CellTable ui:field="keyBindingSelection" addStyleNames="{style.tables}"/>
-    </g:HTMLPanel>
+    </g:FlowPanel>
 </ui:UiBinder>
 
