@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.che.ide.api.event;
 
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -17,7 +18,20 @@ import com.google.gwt.event.shared.GwtEvent;
  *
  * @author Roman Nikitenko
  */
-public class EditorSettingsChangedEvent extends GwtEvent<EditorSettingsChangedHandler> {
+public class EditorSettingsChangedEvent extends GwtEvent<EditorSettingsChangedEvent.EditorSettingsChangedHandler> {
+
+
+    /** Handles Editor Settings Changed Event */
+    public interface EditorSettingsChangedHandler extends EventHandler {
+
+        /**
+         * Perform actions when editor's settings has been changed.
+         *
+         * @param event
+         *         editor's settings changed event
+         */
+        void onEditorSettingsChanged(EditorSettingsChangedEvent event);
+    }
 
     public static final Type<EditorSettingsChangedHandler> TYPE = new Type<>();
 
