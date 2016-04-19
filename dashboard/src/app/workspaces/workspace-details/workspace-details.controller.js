@@ -105,15 +105,14 @@ export class WorkspaceDetailsCtrl {
       .clickOutsideToClose(true)
       .targetEvent(event);
     this.$mdDialog.show(confirm).then(() => {
-      let stoppedStatusPromise = this.cheWorkspace.fetchStatusChange(this.workspaceId, 'STOPPED');
-
-      if (this.workspaceDetails.status === 'RUNNING') {
-        this.cheWorkspace.stopWorkspace(this.workspaceId);
-      }
-
-      stoppedStatusPromise.then(() => {
+      if (this.workspaceDetails.status === 'STOPPED' || this.workspaceDetails.status === 'ERROR') {
         this.removeWorkspace();
-      });
+      } else if (this.workspaceDetails.status === 'RUNNING') {
+        this.cheWorkspace.stopWorkspace(this.workspaceId);
+        this.cheWorkspace.fetchStatusChange(this.workspaceId, 'STOPPED').then(() => {
+          this.removeWorkspace();
+        });
+      }
     });
   }
 
@@ -132,20 +131,24 @@ export class WorkspaceDetailsCtrl {
 
   runWorkspace() {
     this.showShowMore = true;
+    delete this.errorMessage;
 
     this.ideSvc.init();
     this.ideSvc.setSelectedWorkspace(this.workspaceDetails);
     this.$rootScope.loadingIDE = false;
-    let promise = this.ideSvc.startIde(true);
+    let promise = this.ideSvc.startIde(this.workspaceDetails, true);
     promise.then(() => {
       this.showShowMore = false;
     }, (error) => {
       let errorMessage = 'Unable to start this workspace. ';
       if (error.data && error.data.message !== null) {
         errorMessage += error.data.message;
+      } else if (error.error) {
+        errorMessage += error.error;
       }
-      this.cheNotification.showError(errorMessage);
       this.$log.error(error);
+
+      this.errorMessage = errorMessage;
     });
   }
 

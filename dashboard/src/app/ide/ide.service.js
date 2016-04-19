@@ -60,6 +60,9 @@ class IdeSvc {
       step.hasError = false;
     });
 
+    if (this.selectedWorkspace) {
+      this.cleanupChannels(this.selectedWorkspace.id);
+    }
   }
 
   getStepText(stepNumber) {
@@ -96,7 +99,7 @@ class IdeSvc {
     this.$log.error(error);
   }
 
-  startIde(noIdeLoader) {
+  startIde(workspace, noIdeLoader) {
     let defer = this.$q.defer();
     if (!noIdeLoader) {
       this.ideLoaderSvc.addLoader();
@@ -104,30 +107,40 @@ class IdeSvc {
 
     this.currentStep = 1;
 
-    let bus = this.cheAPI.getWebsocket().getBus(this.selectedWorkspace.id);
+    let bus = this.cheAPI.getWebsocket().getBus(workspace.id);
 
-    let startWorkspacePromise = this.startWorkspace(bus, this.selectedWorkspace);
-    startWorkspacePromise.then(() => {
-      let runningStatusPromise = this.cheWorkspace.fetchStatusChange(this.selectedWorkspace.id, 'RUNNING');
-      runningStatusPromise.then(() => {
-        // Now that the container is started, wait for the extension server. For this, needs to get runtime details
-        let promiseWorkspace = this.cheWorkspace.fetchWorkspaceDetails(this.selectedWorkspace.id);
-        promiseWorkspace.then(() => {
-          let websocketUrl = this.cheWorkspace.getWebsocketUrl(this.selectedWorkspace.id);
-          // try to connect
-          this.websocketReconnect = 50;
-          this.connectToExtensionServer(websocketUrl, this.selectedWorkspace.id);
-          defer.resolve();
-        }, (error) => {
-          this.handleError(error);
-          defer.reject(error);
-        });
+    let startWorkspaceDefer = this.$q.defer();
+    this.startWorkspace(bus, workspace).then(() => {
+      this.cheWorkspace.fetchStatusChange(workspace.id, 'RUNNING').then(() => {
+        return this.cheWorkspace.fetchWorkspaceDetails(workspace.id);
+      }).then(() => {
+        startWorkspaceDefer.resolve();
+      }, (error) => {
+        this.handleError(error);
+        startWorkspaceDefer.reject(error);
+      });
+      this.cheWorkspace.fetchStatusChange(workspace.id, 'ERROR').then((data) => {
+        startWorkspaceDefer.reject(data);
       });
     }, (error) => {
-      defer.reject(error);
+      startWorkspaceDefer.reject(error);
     });
 
-    return defer.promise;
+    return startWorkspaceDefer.promise.then(() => {
+      if (workspace.id === this.selectedWorkspace.id) {
+        // Now that the container is started, wait for the extension server. For this, needs to get runtime details
+        let websocketUrl = this.cheWorkspace.getWebsocketUrl(workspace.id);
+        // try to connect
+        this.websocketReconnect = 50;
+        this.connectToExtensionServer(workspace.id, websocketUrl);
+      } else {
+        this.cleanupChannels(workspace.id);
+      }
+      return this.$q.resolve();
+    }, (error) => {
+      this.cleanupChannels(workspace.id);
+      return this.$q.reject(error);
+    });
   }
 
   startWorkspace(bus, data) {
@@ -227,7 +240,7 @@ class IdeSvc {
     return startWorkspacePromise;
   }
 
-  connectToExtensionServer(websocketURL, workspaceId) {
+  connectToExtensionServer(workspaceId, websocketURL) {
     this.currentStep = 2;
     // try to connect
     let websocketStream = this.$websocket(websocketURL);
@@ -235,7 +248,7 @@ class IdeSvc {
     // on success, create project
     websocketStream.onOpen(() => {
       this.openIde();
-      this.cleanupChannels(websocketStream);
+      this.cleanupChannels(workspaceId, websocketStream);
     });
 
     // on error, retry to connect or after a delay, abort
@@ -243,10 +256,10 @@ class IdeSvc {
       this.websocketReconnect--;
       if (this.websocketReconnect > 0) {
         this.$timeout(() => {
-          this.connectToExtensionServer(websocketURL, workspaceId);
+          this.connectToExtensionServer(workspaceId, websocketURL);
         }, 1000);
       } else {
-        this.cleanupChannels(websocketStream);
+        this.cleanupChannels(workspaceId, websocketStream);
         this.steps[this.currentStep].hasError = true;
         this.$log.error('error when starting remote extension', error);
         // need to show the error
@@ -332,12 +345,12 @@ class IdeSvc {
   /**
    * Cleanup the websocket channels (unsubscribe)
    */
-  cleanupChannels(websocketStream) {
+  cleanupChannels(workspaceId, websocketStream) {
     if (websocketStream != null) {
       websocketStream.close();
     }
 
-    let workspaceBus = this.cheAPI.getWebsocket().getBus(this.selectedWorkspace.id);
+    let workspaceBus = this.cheAPI.getWebsocket().getBus(workspaceId);
 
     if (workspaceBus != null) {
       this.listeningChannels.forEach((channel) => {

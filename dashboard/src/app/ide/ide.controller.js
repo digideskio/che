@@ -130,7 +130,7 @@ class IdeCtrl {
     }
 
     if (this.selectedWorkspace) {
-      if (this.ideSvc.getPreventRedirection() && 'STARTING' === this.selectedWorkspace.status) {
+      if (this.ideSvc.getPreventRedirection()) {
         this.$rootScope.hideIdeLoader = false;
         this.ideLoaderSvc.addLoader();
       } else if ('RUNNING' === this.selectedWorkspace.status) {
@@ -141,7 +141,7 @@ class IdeCtrl {
         this.$rootScope.hideIdeLoader = false;
         this.$rootScope.hideLoader = true;
         this.ideSvc.init();
-        this.ideSvc.startIde();
+        this.ideSvc.startIde(this.selectedWorkspace);
       }
     } else {
       this.$rootScope.hideIdeLoader = true;
