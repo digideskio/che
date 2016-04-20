@@ -398,4 +398,19 @@ public interface JavaLocalizationConstant extends Messages {
 
     @Key("source.title")
     String sourceTitle();
+
+    @Key("mark.directory.as.group")
+    String markDirectoryAs();
+
+    @Key("mark.directory.as.source.description")
+    String markDirectoryAsSourceDescription();
+
+    @Key("mark.directory.as.source.action")
+    String markDirectoryAsSourceAction();
+
+    @Key("unmark.directory.as.source.action")
+    String unmarkDirectoryAsSourceAction();
+
+    @Key("unmark.directory.as.source.description")
+    String unmarkDirectoryAsSourceDescription();
 }

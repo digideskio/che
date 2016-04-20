@@ -44,8 +44,7 @@ import static org.eclipse.che.ide.api.notification.StatusNotification.Status.FAI
 public class ProjectClasspathPresenter implements ProjectClasspathView.ActionDelegate, ClasspathPagePresenter.DirtyStateListener {
     private final ProjectClasspathView        view;
     private final Set<ClasspathPagePresenter> classpathPages;
-    private final ClasspathServiceClient
-                                              service;
+    private final ClasspathServiceClient      service;
     private final AppContext                  appContext;
     private final JavaLocalizationConstant    locale;
     private final DialogFactory               dialogFactory;

@@ -14,7 +14,6 @@ import org.eclipse.che.api.promises.client.Promise;
 import org.eclipse.che.api.promises.client.js.Promises;
 import org.eclipse.che.ide.api.project.node.Node;
 import org.eclipse.che.ide.ext.java.client.project.node.PackageNode;
-import org.eclipse.che.ide.ext.java.client.project.node.SourceFolderNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ import static org.eclipse.che.ide.ext.java.shared.dto.classpath.ClasspathEntry.S
 public class SourceFolderNodeInterceptor implements ClasspathNodeInterceptor {
     @Override
     public boolean isNodeValid(Node node) {
-        return !node.isLeaf() && node instanceof SourceFolderNode;
+        return !node.isLeaf();
     }
 
     @Override

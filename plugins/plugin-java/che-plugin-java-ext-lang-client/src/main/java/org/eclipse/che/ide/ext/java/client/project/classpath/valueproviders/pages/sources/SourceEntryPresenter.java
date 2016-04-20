@@ -23,7 +23,6 @@ import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.node
 import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.pages.AbstractClasspathPagePresenter;
 import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.SelectNodePresenter;
 import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.interceptors.SourceFolderNodeInterceptor;
-import org.eclipse.che.ide.project.shared.NodesResources;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.validation.constraints.NotNull;
@@ -41,12 +40,10 @@ import static org.eclipse.che.ide.ext.java.shared.dto.classpath.ClasspathEntry.S
 @Singleton
 public class SourceEntryPresenter extends AbstractClasspathPagePresenter implements SourceEntryView.ActionDelegate,
                                                                                     NodeWidget.ActionDelegate {
-
     private final ClasspathResolver         classpathResolver;
     private final ProjectClasspathResources resources;
     private final JavaResources             javaResources;
     private final AppContext                appContext;
-    private final NodesResources            nodesResources;
     private final SelectNodePresenter       selectNodePresenter;
     private final SourceEntryView           view;
 
@@ -62,7 +59,6 @@ public class SourceEntryPresenter extends AbstractClasspathPagePresenter impleme
                                 ProjectClasspathResources resources,
                                 JavaResources javaResources,
                                 AppContext appContext,
-                                NodesResources nodesResources,
                                 SelectNodePresenter selectNodePresenter) {
         super(localization.sourcePropertyName(), localization.javaBuildPathCategory(), null);
         this.view = view;
@@ -70,7 +66,6 @@ public class SourceEntryPresenter extends AbstractClasspathPagePresenter impleme
         this.resources = resources;
         this.javaResources = javaResources;
         this.appContext = appContext;
-        this.nodesResources = nodesResources;
         this.selectNodePresenter = selectNodePresenter;
 
         pageNodes = new HashMap<>();
@@ -140,7 +135,6 @@ public class SourceEntryPresenter extends AbstractClasspathPagePresenter impleme
         for (String source : classpathResolver.getSources()) {
             addNode(source, SOURCE, javaResources.sourceFolder());
         }
-
 
         dirty = false;
         delegate.onDirtyChanged();

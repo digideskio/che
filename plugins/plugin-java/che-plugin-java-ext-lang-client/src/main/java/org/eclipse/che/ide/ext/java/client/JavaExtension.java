@@ -26,6 +26,8 @@ import org.eclipse.che.ide.api.keybinding.KeyBindingAgent;
 import org.eclipse.che.ide.api.keybinding.KeyBuilder;
 import org.eclipse.che.ide.ext.java.client.action.FileStructureAction;
 import org.eclipse.che.ide.ext.java.client.action.FindUsagesAction;
+import org.eclipse.che.ide.ext.java.client.action.MarkDirAsSourceAction;
+import org.eclipse.che.ide.ext.java.client.action.MarkDirectoryAsGroup;
 import org.eclipse.che.ide.ext.java.client.action.NewJavaSourceFileAction;
 import org.eclipse.che.ide.ext.java.client.action.NewPackageAction;
 import org.eclipse.che.ide.ext.java.client.action.OpenDeclarationAction;
@@ -33,6 +35,7 @@ import org.eclipse.che.ide.ext.java.client.action.OpenImplementationAction;
 import org.eclipse.che.ide.ext.java.client.action.OrganizeImportsAction;
 import org.eclipse.che.ide.ext.java.client.action.ProjectClasspathAction;
 import org.eclipse.che.ide.ext.java.client.action.QuickDocumentationAction;
+import org.eclipse.che.ide.ext.java.client.action.UnmarkDirAsSourceAction;
 import org.eclipse.che.ide.ext.java.client.refactoring.move.CutJavaSourceAction;
 import org.eclipse.che.ide.ext.java.client.refactoring.move.MoveAction;
 import org.eclipse.che.ide.ext.java.client.refactoring.rename.RenameRefactoringAction;
@@ -76,6 +79,9 @@ public class JavaExtension {
                                 MoveAction moveAction,
                                 CutJavaSourceAction cutAction,
                                 FileStructureAction fileStructureAction,
+                                MarkDirAsSourceAction markDirAsSourceAction,
+                                UnmarkDirAsSourceAction unmarkDirAsSourceAction,
+                                MarkDirectoryAsGroup markDirectoryAsGroup,
                                 OrganizeImportsAction organizeImportsAction,
                                 RenameRefactoringAction renameRefactoringAction,
                                 QuickDocumentationAction quickDocumentationAction,
@@ -123,6 +129,19 @@ public class JavaExtension {
         assistantGroup.add(openImplementationAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
         assistantGroup.add(fileStructureAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
         assistantGroup.add(findUsagesAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
+
+        //Configure Build Path action group
+        actionManager.registerAction("markDirectoryAsSourceGroup", markDirectoryAsGroup);
+        actionManager.registerAction("markDirectoryAsSource", markDirAsSourceAction);
+        actionManager.registerAction("unmarkDirectoryAsSource", unmarkDirAsSourceAction);
+        markDirectoryAsGroup.add(markDirAsSourceAction);
+        markDirectoryAsGroup.add(unmarkDirAsSourceAction);
+        markDirectoryAsGroup.add(projectClasspathAction);
+
+        DefaultActionGroup mainContextMenuGroup = (DefaultActionGroup)actionManager.getAction("resourceOperation");
+        mainContextMenuGroup.addSeparator();
+        mainContextMenuGroup.add(markDirectoryAsGroup);
+        mainContextMenuGroup.addSeparator();
 
         if (UserAgent.isMac()) {
             keyBinding.getGlobal().addKey(new KeyBuilder().alt().control().charCode('b').build(), "openImplementation");

@@ -28,7 +28,6 @@ import org.eclipse.che.ide.api.project.node.interceptor.NodeInterceptor;
 import org.eclipse.che.ide.ext.java.client.JavaResources;
 import org.eclipse.che.ide.ext.java.client.project.classpath.valueproviders.selectnode.interceptors.ClasspathNodeInterceptor;
 import org.eclipse.che.ide.ext.java.client.project.interceptor.JavaContentRootInterceptor;
-import org.eclipse.che.ide.ext.java.client.project.node.SourceFolderNode;
 import org.eclipse.che.ide.project.shared.NodesResources;
 import org.eclipse.che.ide.ui.smartTree.KeyboardNavigationHandler;
 import org.eclipse.che.ide.ui.smartTree.NodeLoader;
@@ -45,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.eclipse.che.ide.ext.java.shared.dto.classpath.ClasspathEntry.SOURCE;
 import static org.eclipse.che.ide.ui.smartTree.SelectionModel.Mode.SINGLE;
 
 /**
@@ -188,7 +188,7 @@ public class SelectNodeViewImpl extends Window implements SelectNodeView {
         }
         Node selectedNode = nodes.get(0);
         SVGResource icon;
-        if (selectedNode instanceof SourceFolderNode) {
+        if (SOURCE == interceptor.getKind()) {
             icon = javaResources.sourceFolder();
         } else if (selectedNode.getName().endsWith(".jar")) {
             icon = javaResources.jarFileIcon();
