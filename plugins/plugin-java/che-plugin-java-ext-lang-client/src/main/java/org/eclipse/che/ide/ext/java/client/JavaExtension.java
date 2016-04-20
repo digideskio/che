@@ -33,8 +33,10 @@ import org.eclipse.che.ide.ext.java.client.action.NewPackageAction;
 import org.eclipse.che.ide.ext.java.client.action.OpenDeclarationAction;
 import org.eclipse.che.ide.ext.java.client.action.OpenImplementationAction;
 import org.eclipse.che.ide.ext.java.client.action.OrganizeImportsAction;
+import org.eclipse.che.ide.ext.java.client.action.ParametersHintsAction;
 import org.eclipse.che.ide.ext.java.client.action.ProjectClasspathAction;
 import org.eclipse.che.ide.ext.java.client.action.QuickDocumentationAction;
+import org.eclipse.che.ide.ext.java.client.action.QuickFixAction;
 import org.eclipse.che.ide.ext.java.client.action.UnmarkDirAsSourceAction;
 import org.eclipse.che.ide.ext.java.client.refactoring.move.CutJavaSourceAction;
 import org.eclipse.che.ide.ext.java.client.refactoring.move.MoveAction;
@@ -51,7 +53,7 @@ import static org.eclipse.che.ide.api.action.IdeActions.GROUP_PROJECT;
 @Extension(title = "Java", version = "3.0.0")
 public class JavaExtension {
 
-    private final String GROUP_ASSISTANT_REFACTORING  = "assistantRefactoringGroup";
+    private final String GROUP_ASSISTANT_REFACTORING = "assistantRefactoringGroup";
 
     @Inject
     public JavaExtension(FileTypeRegistry fileTypeRegistry,
@@ -65,13 +67,8 @@ public class JavaExtension {
         fileTypeRegistry.registerFileType(classFile);
     }
 
-    /** For test use only. */
-    public JavaExtension() {
-    }
-
     @Inject
-    private void prepareActions(JavaLocalizationConstant localizationConstant,
-                                NewPackageAction newPackageAction,
+    private void prepareActions(NewPackageAction newPackageAction,
                                 KeyBindingAgent keyBinding,
                                 NewJavaSourceFileAction newJavaSourceFileAction,
                                 ActionManager actionManager,
@@ -85,9 +82,11 @@ public class JavaExtension {
                                 OrganizeImportsAction organizeImportsAction,
                                 RenameRefactoringAction renameRefactoringAction,
                                 QuickDocumentationAction quickDocumentationAction,
+                                QuickFixAction quickFixAction,
                                 OpenDeclarationAction openDeclarationAction,
                                 OpenImplementationAction openImplementationAction,
-                                FindUsagesAction findUsagesAction) {
+                                FindUsagesAction findUsagesAction,
+                                ParametersHintsAction parametersHintsAction) {
 
         DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);
 
@@ -122,8 +121,11 @@ public class JavaExtension {
         actionManager.registerAction("javaFindUsages", findUsagesAction);
         actionManager.registerAction("javaClassStructure", fileStructureAction);
         actionManager.registerAction("organizeImports", organizeImportsAction);
+        actionManager.registerAction("parametersInfo", parametersHintsAction);
+        actionManager.registerAction("quickFix", quickFixAction);
 
         assistantGroup.add(quickDocumentationAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
+        assistantGroup.add(quickFixAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
         assistantGroup.add(openDeclarationAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
         assistantGroup.add(organizeImportsAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
         assistantGroup.add(openImplementationAction, new Constraints(Anchor.BEFORE, GROUP_ASSISTANT_REFACTORING));
@@ -148,11 +150,13 @@ public class JavaExtension {
             keyBinding.getGlobal().addKey(new KeyBuilder().control().charCode('j').build(), "showQuickDoc");
             keyBinding.getGlobal().addKey(new KeyBuilder().control().charCode(KeyCodeMap.F12).build(), "javaClassStructure");
             keyBinding.getGlobal().addKey(new KeyBuilder().alt().control().charCode('o').build(), "organizeImports");
+            keyBinding.getGlobal().addKey(new KeyBuilder().control().charCode('p').build(), "parametersInfo");
         } else {
             keyBinding.getGlobal().addKey(new KeyBuilder().alt().action().charCode('b').build(), "openImplementation");
             keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('q').build(), "showQuickDoc");
             keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode(KeyCodeMap.F12).build(), "javaClassStructure");
             keyBinding.getGlobal().addKey(new KeyBuilder().alt().action().charCode('o').build(), "organizeImports");
+            keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('p').build(), "parametersInfo");
         }
         keyBinding.getGlobal().addKey(new KeyBuilder().none().charCode(KeyCodeMap.F4).build(), "openJavaDeclaration");
         keyBinding.getGlobal().addKey(new KeyBuilder().shift().charCode(KeyCodeMap.F6).build(), "javaRenameRefactoring");
